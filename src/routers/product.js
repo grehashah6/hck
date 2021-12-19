@@ -1,4 +1,5 @@
 const express = require('express')
+const multer =require('multer')
 const router = new express.Router()
 const auth = require('../middleware/auth')
  const {
@@ -14,8 +15,37 @@ const auth = require('../middleware/auth')
 
 } = require('../controllers/product')
 
+const storage = multer.diskStorage({
+    destination:function(req , file , cb){
+        cb(null , './public/uploads')
+    },
+    filename: function(req , file , cb){
+        cb(null , file.originalname);  
+    }
+  });
+  
+  const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 2,
+      },
+    fileFilter: (req, file, cb) => {
+      if (
+        file.mimetype == 'image/png' ||
+        file.mimetype == 'image/jpg' ||
+        file.mimetype == 'image/jpeg'
+      ) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+        return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+      }
+    }
+  });
+  
+
 //Create New User 
-router.post('/new', createProduct)
+router.post('/new', upload.single('file'),createProduct)
 
 // //Login User - Public
 // router.post('/login', loginUser )

@@ -3,13 +3,14 @@ const User = require('../models/user.js');
 
 
 exports.createProduct = async (req, res, next) => {
-    // const user = await User.findById({_id:req.user._id});
-    // if(user.role!=="seller"){
-    //   return res.status(401).json({
-    //       success:false,
-    //       data:"Access denied"
-    //   })
-  //}
+    console.log(req.file)
+    const user = await User.findById({_id:req.body.seller});
+    if(user.role!=="seller"){
+      return res.status(401).json({
+          success:false,
+          data:"Access denied"
+      })
+  }
   const product = new Product(req.body)
   try {
     await product.save()
@@ -48,7 +49,7 @@ exports.getProductbByseller = async (req,res) => {
     try{
         const getProductByseller = await Product.find({seller: req.params.seller})
 
-        if (!getProductByseller.lenght) {
+        if (!getProductByseller.length) {
             throw new Error('Product not found');
            }
 
@@ -68,7 +69,7 @@ exports.getProductByName = async (req,res) => {
     try{
         const getProductByName = await Product.find({name: req.params.name})
 
-        if (!getProductByName.lenght) {
+        if (!getProductByName.length) {
             throw new Error('Product not found');
            }
 
