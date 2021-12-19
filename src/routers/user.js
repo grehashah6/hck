@@ -4,6 +4,7 @@ const auth = require('../middleware/auth')
  const {
   createUser,
   loginUser,
+  viewUser,
   updateUser,
   getUsers,
   deleteUser,
@@ -22,8 +23,11 @@ router.post('/login', loginUser )
 //Logout User
 router.post('/logout', auth, logoutUser)
 
+//View User
+router.get('/viewprofile',auth, viewUser)
+
 //Get Users
-router.get('/get',auth, getUsers,)
+router.get('/get', getUsers)
 
 //Get Students
 router.get('/getbuyers', auth,getBuyers)
@@ -34,8 +38,7 @@ router.get('/getsellers', auth,getSellers)
 //Update User
 router.patch('/update/:id',auth, updateUser)
 
-//Enroll New Student
-router.patch('/enroll/:id',auth, enrollCourse)
+
 
 //Delete User
 router.delete('/delete/:id',auth, deleteUser)

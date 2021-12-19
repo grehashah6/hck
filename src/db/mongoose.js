@@ -1,12 +1,15 @@
 const mongoose = require('mongoose')
+const dotenv = require("dotenv");
+dotenv.config();
+
+mongoose.connect(
+  process.env.MONGO_URL,
+  async(err)=>{
+      if(err) throw err;
+      console.log("conncted to db")
+  }
+)
 
 
-const db = "mongodb+srv://user-ojasy:goaldiggers2020@cluster0.btfod.mongodb.net/UnicodeTask5?retryWrites=true&w=majority"
-mongoose
-  .connect(db, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then(() => console.log("MongoDB Connected..."))
-  .catch((err) => console.log(err));
+
+  

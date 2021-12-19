@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const validator = require('validator')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const UserSchema = new mongoose.Schema({
   firstName: {
@@ -18,6 +21,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: [true, 'Email already taken'],
     required: [true, 'Please add an email id'],
+    match: [
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please add a valid email'
+    ]
   },
 
   mobile: {
@@ -40,50 +46,68 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please add a password'],
     minLength: 8
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
+  // resetPasswordToken: String,
+  // resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  tokens: [{
+    token: {
+        type: String, 
+        required: true
+    }
+}]
 });
 
-userSchema.methods.generateAuthToken = async function () {
-    const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, 'secretkeyisunicode')
-  
-    user.tokens = user.tokens.concat({ token })
-    await user.save()
-  
-    return token
-  
-  } 
-  
-  userSchema.statics.findByCredentials = async function ( email, password ) {
-    const user = await this.findOne({ email })
-  
-    if(!user) {
-      throw new Error('Unable to login')
-    }
-  
-    const isMatch = await bcrypt.compare(password, user.password)
-  
-    if(!isMatch) {
-      throw new Error('Unable to login')
-    }
-  
-    return user
-  }
-  
-  
-  userSchema.pre('save', async function (next) {
-    const user = this
-  
-    if(user.isModified('password')) {
-      user.password = await bcrypt.hash(user.password, 8)
-    }
-  
-    next()
-  })
+UserSchema.methods.toJSON = function () {
+  const user = this
+  const userObject = user.toObject()
 
-module.exports = mongoose.model('User', UserSchema);
+  delete userObject.password
+  delete userObject.tokens
+
+  return userObject
+}
+
+UserSchema.methods.generateAuthToken = async function () {
+  const user = this
+  const token = jwt.sign({ _id: user._id.toString() }, 'secretkeyishackathon')
+  
+
+  user.tokens = user.tokens.concat({ token })
+  await user.save()
+
+  return token
+}
+
+UserSchema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email })
+
+  if (!user) {
+      throw new Error('Unable to login')
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password)
+
+  if (!isMatch) {
+      throw new Error('Unable to login')
+  }
+
+  return user
+}
+
+// Hash the plain text password before saving
+UserSchema.pre('save', async function (next) {
+  const user = this
+
+  if (user.isModified('password')) {
+      user.password = await bcrypt.hash(user.password, 8)
+  }
+
+  next()
+})
+
+const User = mongoose.model('User', UserSchema)
+
+module.exports = User

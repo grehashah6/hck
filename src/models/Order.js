@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User=require('../models/User.js')
+
 
 const OrderSchema = new mongoose.Schema({
     product:{
@@ -31,6 +31,10 @@ const OrderSchema = new mongoose.Schema({
         type:String,
         enum:['Placed','Dispatched','Delivered'],
         default:'Placed'
+    },
+    Pincode:{
+        type:Number,
+        required:[true, 'Location is needed']
     }
 });
 module.exports = mongoose.model('Order', OrderSchema);

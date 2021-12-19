@@ -1,5 +1,4 @@
-const User = require('../models/User')
-
+const User = require('../models/user')
 
 
 exports.createUser = async (req, res) => {
@@ -38,7 +37,8 @@ exports.loginUser = async (req, res) => {
   } catch(e){
     console.log(e)
     res.status(400).json({
-      success: false
+      success: false,
+      message: "Check Email or Password"
     })
   }
 }
@@ -56,6 +56,10 @@ exports.logoutUser = async (req,res) => {
 }
 
 }
+
+exports.viewUser = async (req, res) => {
+  res.send(req.user);
+};
 
 exports.getUsers = async (req,res) => {
   try{
@@ -115,7 +119,7 @@ exports.getSellers = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-  
+    
   const _id = req.params.id
   const updates = Object.keys(req.body)
   const allowedUpdates = ['mobile','address']
@@ -144,8 +148,6 @@ exports.updateUser = async (req, res) => {
 
   }
 }
-
-
 
 exports.deleteUser = async (req, res) => {
   const _id = req.params.id  
