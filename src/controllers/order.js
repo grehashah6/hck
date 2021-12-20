@@ -1,38 +1,74 @@
 const Product = require('../models/Product.js')
 const Order = require('../models/Order.js')
-const User = require('../models/User.js')
 
 exports.createOrder= async(req,res,next)=>{
-    const user = await User.findById(req.user._id);
-  
-    if(user.role!=='buyer') {
-      return res.status(401).json({
-        success: false,
-        data: 'You cannot place an order'
-      });
+   // const user = await User.findById(req.user._id);
+    orderItems = []
+    totalCost=0;
+    // if(user.role!=='buyer') {
+    //   return res.status(401).json({
+    //     success: false,
+    //     data: 'You cannot place an order'
+    //   });
+    // }
+    
+    for (const x in req.body.products){
+      element = req.body.products[x]
+      const product = await Product.findById(element.id);
+      var st="Placed";
+      if(element.quantity < product.minquantity){
+        st="Placed"
+      }else{
+        st = "Dispatched"
+      }
+      orderItems.push({status: st, product: product})
+      totalCost+= product.cost * 0.5 * element.quantity
     }
+      
   
-    const product = await Product.findById(req.body.product);
-    console.log(product);
-  
+
+    const sameSeller = new Set(orderItems.map(v => v.product.compname));
+    if(sameSeller.size<orderItems.length){
+      totalCost=totalCost - totalCost*0.05
+    }
+   
     const orderObj = {
-      product: req.body.product,
-      quantity: req.body.quantity,
-      buyer: req.user._id,
-      seller: product.compname,
-      totalCost: (req.body.quantity * product.cost),
+      products: orderItems,
+      buyer: req.body.userID,
+      totalCost: totalCost,
+      pincode:req.body.pincode
     }
-    if(orderObj.quantity<=product.maxquantity){
-      const order = await Order.create(orderObj);
-      product.quantity -= orderObj.quantity;
-      product.save()
-      return res.status(200).json({
-        success: true,
-        data: order
-      })
-    }
-    res.status(400).json({
+    var order = new Order(orderObj)
+    order.save()
+    res.status(200).json({
       success: true,
-      data: `only ${product.maxquantity} are available`
+      data: "Placed Successfully!"
     });
-  };
+};
+
+exports.sendOTPMail = async(req,res,next)=>{
+  const order = await Order.findById(req.params.id);
+  const buyer=await User.findById(order.buyer);
+  
+  const otp=Math.floor(100000 + Math.random() * 900000)
+  transporter.sendMail({
+    from:"nodeforme@gmail.com",
+    to:buyer.email,
+    subject:"One time password for verification",
+    message:`Your One time Password for completing the delivery is ${otp}.Please share it with the delivery guy. `
+  }
+,(error,info)=>{
+  if(error){
+    res.status(400).json({
+      success:false,
+      data:"Mail was not sent"
+    })
+  }else{
+    res.status(200).json({
+      success:true,
+      data:"mail succesfully sent",
+      otp:otp
+    })
+  }
+})
+}
