@@ -132,7 +132,7 @@ exports.getBuyers = async (req, res) => {
 
 exports.getSellers = async (req, res) => {
   try{
-    const getSellers = await User.find({role: 'Seller'})
+    const getSellers = await User.find({role: 'seller'})
     if (!getSellers.length) {
       throw new Error('No Sellers!')
      }

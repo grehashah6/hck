@@ -19,7 +19,7 @@ exports.createOrder= async(req,res,next)=>{
       product: req.body.product,
       quantity: req.body.quantity,
       buyer: req.user._id,
-      seller: product.seller,
+      seller: product.compname,
       totalCost: (req.body.quantity * product.cost),
     }
     if(orderObj.quantity<=product.maxquantity){
