@@ -42,33 +42,42 @@ exports.createOrder= async(req,res,next)=>{
     order.save()
     res.status(200).json({
       success: true,
-      data: "Placed Successfully!"
+      data:order 
     });
 };
+const nodemailer=require('nodemailer')
+// var transporter=nodemailer.createTransport({
+//     service:'Gmail',
+//     auth:{
+//         user:'codebrigade181221@gmail.com',
+//         pass:process.env.gmpass
 
-exports.sendOTPMail = async(req,res,next)=>{
-  const order = await Order.findById(req.params.id);
-  const buyer=await User.findById(order.buyer);
+//     },
+//     port:465
+// })
+// exports.sendOTPMail = async(req,res,next)=>{
+//   const order = await Order.findById(req.params.id);
+//   const buyer=await User.findById(order.buyer);
   
-  const otp=Math.floor(100000 + Math.random() * 900000)
-  transporter.sendMail({
-    from:"nodeforme@gmail.com",
-    to:buyer.email,
-    subject:"One time password for verification",
-    message:`Your One time Password for completing the delivery is ${otp}.Please share it with the delivery guy. `
-  }
-,(error,info)=>{
-  if(error){
-    res.status(400).json({
-      success:false,
-      data:"Mail was not sent"
-    })
-  }else{
-    res.status(200).json({
-      success:true,
-      data:"mail succesfully sent",
-      otp:otp
-    })
-  }
-})
-}
+//   const otp=Math.floor(100000 + Math.random() * 900000)
+//   transporter.sendMail({
+//     from:"nodeforme@gmail.com",
+//     to:buyer.email,
+//     subject:"One time password for verification",
+//     message:`Your One time Password for completing the delivery is ${otp}.Please share it with the delivery guy. `
+//   }
+// ,(error,info)=>{
+//   if(error){
+//     res.status(400).json({
+//       success:false,
+//       data:"Mail was not sent"
+//     })
+//   }else{
+//     res.status(200).json({
+//       success:true,
+//       data:"mail succesfully sent",
+//       otp:otp
+//     })
+//   }
+// })
+// }

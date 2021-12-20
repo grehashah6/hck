@@ -10,7 +10,8 @@ const auth = require('../middleware/auth')
   deleteUser,
   getBuyers,
   getSellers,
-  logoutUser
+  logoutUser,
+  OTPlogin
 
 } = require('../controllers/user')
 
@@ -38,6 +39,8 @@ router.get('/getsellers', auth,getSellers)
 //Update User
 router.patch('/update/:id',auth, updateUser)
 
+//OTP login
+router.post('/otplog', OTPlogin)
 
 
 //Delete User

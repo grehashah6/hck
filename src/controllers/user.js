@@ -1,6 +1,32 @@
 const User = require('../models/user')
+const { Auth, LoginCredentials } = require("two-step-auth");
+var OTP ;
+
+async function login(emailId) {
+try {
+	const res = await Auth(emailId, "FindIn");
+	// console.log(res);
+	// console.log(res.mail);
+	// OTP=res.OTP;
+	// console.log(res.success);
+} catch (error) {
+	console.log(error);
+}
+}
+
+// // This should have less secure apps enabled
+LoginCredentials.mailID = "codebrigade181221@gmail.com";
+
+// // You can store them in your env variables and
+// // access them, it will work fine
+LoginCredentials.password = process.env.gmpass;
+// LoginCredentials.use = true;
+
+// // Pass in the mail ID you need to verify
+// login("verificationEmail@anyDomain.com");
 
 
+ 
 exports.createUser = async (req, res) => {
   try {
     const user = new User(req.body)
@@ -28,6 +54,7 @@ exports.loginUser = async (req, res) => {
     const user = await User.findByCredentials(req.body.email, req.body.password)
 
     const token = await user.generateAuthToken()
+    login(req.body.email)
 
     res.status(201).json({
       success: true,
@@ -42,6 +69,22 @@ exports.loginUser = async (req, res) => {
     })
   }
 }
+
+exports.OTPlogin= async (req,res) => {
+  if(OTP=req.body.OTP){
+    res.status(201).json({
+      success: true,
+      data: "Succesful OTP Authentication!"
+    })}else {
+      res.status(400).json({
+        success: false,
+        message: "Wrong! Please Try again!"
+      })
+
+    }
+  }
+
+
 
 exports.updateUser = async (req, res) => {
   
