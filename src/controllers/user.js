@@ -43,6 +43,37 @@ exports.loginUser = async (req, res) => {
   }
 }
 
+exports.updateUser = async (req, res) => {
+  
+  const _id = req.params.id
+  const updates = Object.keys(req.body)
+  const allowedUpdates = ['mobile','address']
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+  if (!isValidOperation) {
+      return res.status(400).send({ error: 'Invalid updates!' })
+  }
+
+  try {
+    const user = await User.findOneAndUpdate({_id: _id}, req.body, {new:true})
+  
+    if(!user){
+      return res.status(404).send('User not found')
+   }
+      
+      res.json({
+        success: true,
+        data: user
+      })
+  } catch (e) {
+    res.status(500).json({
+      success: false,
+      message: e.message
+    })
+
+  }
+}
+
 exports.logoutUser = async (req,res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {

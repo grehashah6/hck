@@ -3,14 +3,9 @@ const User = require('../models/user.js');
 
 
 exports.createProduct = async (req, res, next) => {
-    console.log(req.file)
-    const user = await User.findById({_id:req.body.seller});
-    if(user.role!=="seller"){
-      return res.status(401).json({
-          success:false,
-          data:"Access denied"
-      })
-  }
+    
+
+    
   const product = new Product(req.body)
   try {
     await product.save()
@@ -24,7 +19,7 @@ exports.createProduct = async (req, res, next) => {
       message: e.message
     })
   }
-  };
+}
 
 exports.getProduct = async (req,res) => {
     try{
@@ -45,9 +40,9 @@ exports.getProduct = async (req,res) => {
     }
 }
 
-exports.getProductbByseller = async (req,res) => {
+exports.getProductbyProdName = async (req,res) => {
     try{
-        const getProductByseller = await Product.find({seller: req.params.seller})
+        const getProductByseller = await Product.find({title: req.params.title})
 
         if (!getProductByseller.length) {
             throw new Error('Product not found');
@@ -65,17 +60,17 @@ exports.getProductbByseller = async (req,res) => {
     }
 }
 
-exports.getProductByName = async (req,res) => {
+exports.getProductByCompName = async (req,res) => {
     try{
-        const getProductByName = await Product.find({name: req.params.name})
+        const getProductByCompName = await Product.find({compname: req.params.compname})
 
-        if (!getProductByName.length) {
+        if (!getProductByCompName.length) {
             throw new Error('Product not found');
            }
 
         res.json({
             success: true,
-            data: getProductByName
+            data: getProductByCompName
         })
     } catch(e) {
         res.status(400).json({
@@ -85,47 +80,35 @@ exports.getProductByName = async (req,res) => {
     }
 }
 
-// exports.updateProduct = async (req, res) => {
-//     const user = await User.findById({_id:req.user._id});
-//     if(user.role!=="seller"){
-//       return res.status(401).json({
-//           success:false,
-//           data:"Access denied"
-//       })
-//   }
+exports.updateProduct = async (req, res) => {
+
   
-//     const _id = req.params.id
-//     const updates = Object.keys(req.body)
-//     const allowedUpdates = ['name','descr','duration']
-//     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    const _id = req.params.id
+
   
-//     if (!isValidOperation) {
-//         return res.status(400).send({ error: 'Invalid updates!' })
-//     }
-  
-//     try {
-//       const product = await Product.findOneAndUpdate({_id: _id}, req.body, {new:true})
+    try {
+      const product = await Product.findOneAndUpdate({_id: _id}, req.body, {new:true})
     
-//       if(!product){
-//         return res.status(404).send('Product not found')
-//      }
+      if(!product){
+        return res.status(404).send('Product not found')
+     }
         
-//         res.json({
-//           success: true,
-//           data: product
-//         })
-//     } catch (e) {
-//       res.status(500).json({
-//         success: false,
-//         message: e.message
-//       })
+        res.json({
+          success: true,
+          data: product
+        })
+    } catch (e) {
+      res.status(500).json({
+        success: false,
+        message: e.message
+      })
   
-//     }
-//   }
+    }
+  }
 
 exports.deleteProducts = async (req, res) => {
     try {
-       const product = await Product.findOneAndDelete({_id: req.params.id, intructor: req.user._id});
+       const product = await Product.findOneAndDelete({_id: req.params.id});
        if (!product) {
            res.status(404).json({
                message: "Product does not exist"

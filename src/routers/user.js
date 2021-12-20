@@ -29,10 +29,10 @@ router.get('/viewprofile',auth, viewUser)
 //Get Users
 router.get('/get', getUsers)
 
-//Get Students
+//Get Buyers
 router.get('/getbuyers', auth,getBuyers)
 
-//Get Students
+//Get Sellers
 router.get('/getsellers', auth,getSellers)
 
 //Update User

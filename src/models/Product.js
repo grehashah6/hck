@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-//const User=require('../models/user.js')
+
 const ProductSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -18,10 +18,10 @@ const ProductSchema = new mongoose.Schema({
         required:[true,'Minimum quantity must be mentioned'],
     },
 
-    maxquantity:{
-        type:Number,
-        required:[true,'Maximum quantity must be mentioned'],
-    },
+    // maxquantity:{
+    //     type:Number,
+    //     required:[true,'Maximum quantity must be mentioned'],
+    // },
 
     reviews: {
         type:Number,
@@ -49,9 +49,12 @@ const ProductSchema = new mongoose.Schema({
     },
     seller:{
       type:mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required:true
-    },
+      //required:true,
+      ref:'User'
+    },compname:{
+        type: String,
+        required:[true,"Company name"]
+    }
 
 });
 module.exports = mongoose.model('Product', ProductSchema);
