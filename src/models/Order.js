@@ -9,6 +9,9 @@ const OrderSchema = new mongoose.Schema({
         default: "Placed",
       },
       product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      itemType:String,
+      name:String,
+      currentQty:Number
     },
   ],
   buyer: {

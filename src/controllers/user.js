@@ -14,16 +14,10 @@ try {
 }
 }
 
-// // This should have less secure apps enabled
+
 LoginCredentials.mailID = "codebrigade181221@gmail.com";
-
-// // You can store them in your env variables and
-// // access them, it will work fine
 LoginCredentials.password = process.env.gmpass;
-// LoginCredentials.use = true;
 
-// // Pass in the mail ID you need to verify
-// login("verificationEmail@anyDomain.com");
 
 
  

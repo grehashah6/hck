@@ -1,23 +1,23 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
-const CartSchema = new mongoose.Schema(
-  {
-    buyerId: { 
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'User', 
-        //required: true,
+// const CartSchema = new mongoose.Schema(
+//   {
+//     buyerId: { 
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref:'User', 
+//         //required: true,
          
-    },
-    productId: {
-        type: String,
-      },
-    quantity: {
-        type: Number,
-        default: 1,
-      }
+//     },
+//     productId: {
+//         type: String,
+//       },
+//     quantity: {
+//         type: Number,
+//         default: 1,
+//       }
    
-  },
-  { timestamps: true }
-);
+//   },
+//   { timestamps: true }
+// );
 
-module.exports = mongoose.model("Cart", CartSchema);
+// module.exports = mongoose.model("Cart", CartSchema);

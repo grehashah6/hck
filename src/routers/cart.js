@@ -1,18 +1,18 @@
-const express = require('express')
-const router = new express.Router()
-const auth = require('../middleware/auth')
- const {
-  createCart,
+// const express = require('express')
+// const router = new express.Router()
+// const auth = require('../middleware/auth')
+//  const {
+//   createCart,
   
-//   viewCart,
-//   updateCart,
+// //   viewCart,
+// //   updateCart,
   
-//   deleteCart
+// //   deleteCart
 
 
-} = require('../controllers/cart')
+// } = require('../controllers/cart')
 
-//Create New Cart 
-router.post('/new', auth,createCart)
+// //Create New Cart 
+// router.post('/new', auth,createCart)
 
-module.exports = router
+// module.exports = router
